@@ -323,60 +323,81 @@
         private void LoadSettings()
         {
             const string path = "Setting.json";
-            const string rectPath = "RectSetting.txt";
-            const string macroInputPath = "MacroInputPath.txt";
             if ( !File.Exists(path) )
                 return;
-            if ( !File.Exists(rectPath) )
-            {
-                MessageBox.Show("RectSetting.txt 파일이 없습니다");
-                return;
-            }
-            if ( !File.Exists(macroInputPath) )
-            {
-                MessageBox.Show("MacroInputPath.txt 파일이 없습니다");
-                return;
-            }
-
+          
             JObject obj = JObject.Parse(File.ReadAllText(path));
             AppSetting.Accuracy = int.Parse(obj["accuracy"].ToString());
             AppSetting.LeftX = int.Parse(obj["leftx"].ToString());
             AppSetting.LeftY = int.Parse(obj["lefty"].ToString());
             AppSetting.RightX = int.Parse(obj["rightx"].ToString());
             AppSetting.RightY = int.Parse(obj["righty"].ToString());
-            String[] sp1 = Strings.Split(File.ReadAllText(rectPath), "\n");
-            for ( int i = 0 ; i < sp1.Length ; i++ )
+            AppSetting.LeftFishPoint = new Point(
+                int.Parse(obj["left_fishpointx"].ToString()),
+                int.Parse(obj["left_fishpointy"].ToString()));
+            AppSetting.RightFishPoint = new Point(
+                int.Parse(obj["right_fishpointx"].ToString()),
+                int.Parse(obj["right_fishpointy"].ToString()));
+            AppSetting.LeftBoxSpritePoint = new Point(
+                int.Parse(obj["left_boxspritex"].ToString()),
+                int.Parse(obj["left_boxspritey"].ToString()));
+            AppSetting.RightBoxSpritePoint = new Point(
+                int.Parse(obj["right_boxspritex"].ToString()),
+                int.Parse(obj["right_boxspritey"].ToString()));
+            AppSetting.MaxDelay = int.Parse(obj["delay_max"].ToString());
+            AppSetting.MinDelay = int.Parse(obj["delay_min"].ToString());
+
+            JArray array = obj["rectArray"] as JArray;
+            for (int i = 0; i < array.Count; i++)
             {
-                var splited = Strings.Split(sp1[i], ",");
+                var obj2 = array[i] as JObject;
+                var rectstring = obj2["value"].ToString();
+                var rectlist = Strings.Split(rectstring, ",");
                 AppSetting.RectList.Add(new Rect(
-                    int.Parse(splited[0]),
-                    int.Parse(splited[1]),
-                    int.Parse(splited[2]),
-                    int.Parse(splited[3])
-                    ));
+                    int.Parse(rectlist[0]),
+                    int.Parse(rectlist[1]),
+                    int.Parse(rectlist[2]),
+                    int.Parse(rectlist[3])));
+
             }
 
-            String[] sp2 = Strings.Split(File.ReadAllText(macroInputPath), "\n");
-            for ( int i = 0 ; i < sp2.Length ; i++ )
-            {
-                if ( sp2[i].Contains("m") )
-                {
-                    var str = Strings.Replace(sp2[i], "m", "");
-                    String[] splited = Strings.Split(str, ",");
-                    AppSetting.InputList.Add(new MacroInput(new Point(
-                        int.Parse(splited[0]),
-                        int.Parse(splited[1])
-                        )));
-                }
-                else if ( sp2[i].Contains("d") )
-                {
-                    var str = Strings.Replace(sp2[i], "d", "");
-                    AppSetting.InputList.Add(new MacroInput(
-                        int.Parse(str)
-                        ));
-                }
-            }
+            UpdateSetting2();
+            UpdateRectListView();
+            //String[] sp1 = Strings.Split(File.ReadAllText(rectPath), "\n");
+            //for ( int i = 0 ; i < sp1.Length ; i++ )
+            //{
+            //    var splited = Strings.Split(sp1[i], ",");
+            //    AppSetting.RectList.Add(new Rect(
+            //        int.Parse(splited[0]),
+            //        int.Parse(splited[1]),
+            //        int.Parse(splited[2]),
+            //        int.Parse(splited[3])
+            //        ));
+            //}
+
+            //String[] sp2 = Strings.Split(File.ReadAllText(macroInputPath), "\n");
+            //for ( int i = 0 ; i < sp2.Length ; i++ )
+            //{
+            //    if ( sp2[i].Contains("m") )
+            //    {
+            //        var str = Strings.Replace(sp2[i], "m", "");
+            //        String[] splited = Strings.Split(str, ",");
+            //        AppSetting.InputList.Add(new MacroInput(new Point(
+            //            int.Parse(splited[0]),
+            //            int.Parse(splited[1])
+            //            )));
+            //    }
+            //    else if ( sp2[i].Contains("d") )
+            //    {
+            //        var str = Strings.Replace(sp2[i], "d", "");
+            //        AppSetting.InputList.Add(new MacroInput(
+            //            int.Parse(str)
+            //            ));
+            //    }
+            //}
         }
+
+        
         #endregion
 
         #region SaveSettings
@@ -389,6 +410,27 @@
             obj.Add("lefty", AppSetting.LeftY);
             obj.Add("rightx", AppSetting.RightX);
             obj.Add("righty", AppSetting.RightY);
+            obj.Add("left_fishpointx", AppSetting.LeftFishPoint.X);
+            obj.Add("left_fishpointy", AppSetting.LeftFishPoint.Y);
+            obj.Add("right_fishpointx", AppSetting.RightFishPoint.X);
+            obj.Add("right_fishpointy", AppSetting.RightFishPoint.Y);
+            obj.Add("left_boxspritex", AppSetting.LeftBoxSpritePoint.X);
+            obj.Add("left_boxspritey", AppSetting.LeftBoxSpritePoint.Y);
+            obj.Add("right_boxspritex", AppSetting.RightBoxSpritePoint.X);
+            obj.Add("right_boxspritey", AppSetting.RightBoxSpritePoint.Y);
+            obj.Add("delay_max", AppSetting.MaxDelay);
+            obj.Add("delay_min", AppSetting.MinDelay);
+            JObject obj2 = new JObject();
+            JArray array = new JArray();
+            for (int i = 0; i < AppSetting.RectList.Count; i++)
+            {
+                JObject rectobj = new JObject();
+                rectobj.Add("value", AppSetting.RectList[i].ToString());
+                array.Add(rectobj);
+            }
+            obj.Add("rectArray", array);
+
+
             File.WriteAllText(path, obj.ToString());
         }
         #endregion
@@ -445,6 +487,170 @@
             SaveSettings();
         }
         #endregion
+
+        #region Setting2
+       
+        private void Button_Setting2_Apply_Click(object sender, RoutedEventArgs e)
+        {
+            #region exception
+            if (TextBox_FishingLeftX.Text.Length == 0 ||
+               TextBox_FishingLeftY.Text.Length == 0 ||
+               TextBox_FishingRightX.Text.Length == 0 ||
+               TextBox_FishingRightY.Text.Length == 0)
+            {
+                MessageBox.Show("낚시 좌표 설정 값을 제대로 입력해주세요");
+                return;
+            }
+            else if (TextBox_BoxSpriteLeftX.Text.Length == 0 ||
+                     TextBox_BoxSpriteLeftY.Text.Length == 0 ||
+                     TextBox_BoxSpriteRightX.Text.Length == 0 ||
+                     TextBox_BoxSpriteRightY.Text.Length == 0)
+            {
+                MessageBox.Show("박스,정령 좌표 설정 값을 제대로 입력해주세요");
+                return;
+            }
+            else if (TextBox_ClickDelayMinimun.Text.Length == 0 ||
+                    TextBox_ClickDelayMaximum.Text.Length == 0)
+            {
+                MessageBox.Show("딜레이를 제대로 입력해주세요");
+                return;
+            }
+            #endregion
+
+            int.TryParse(TextBox_FishingLeftX.Text, out int FishingLeftX);
+            int.TryParse(TextBox_FishingLeftY.Text, out int FishingLeftY);
+            int.TryParse(TextBox_FishingRightX.Text, out int FishingRightX);
+            int.TryParse(TextBox_FishingRightY.Text, out int FishingRightY);
+
+            int.TryParse(TextBox_BoxSpriteLeftX.Text, out int BoxSpriteLeftX);
+            int.TryParse(TextBox_BoxSpriteLeftY.Text, out int BoxSpriteLeftY);
+            int.TryParse(TextBox_BoxSpriteRightX.Text, out int BoxSpriteRightX);
+            int.TryParse(TextBox_BoxSpriteRightY.Text, out int BoxSpriteRightY);
+
+            int.TryParse(TextBox_ClickDelayMinimun.Text, out int min);
+            int.TryParse(TextBox_ClickDelayMaximum.Text, out int max);
+
+            if (FishingLeftX > FishingRightX)
+            {
+                MessageBox.Show("낚시 좌X는 우X보다 클수 없습니다");
+                return;
+            }
+            else if (FishingLeftY > FishingRightY)
+            {
+                MessageBox.Show("낚시 좌Y는 우Y보다 클수 없습니다");
+                return;
+            }
+            else if (BoxSpriteLeftX > BoxSpriteRightX)
+            {
+                MessageBox.Show("박스정령 좌X는 우X보다 클수 없습니다");
+                return;
+            }
+            else if (BoxSpriteLeftY > BoxSpriteRightY)
+            {
+                MessageBox.Show("박스정령 좌Y는 우Y보다 클수 없습니다");
+                return;
+            }
+            else if (max < min )
+            {
+                MessageBox.Show("딜레이 최소값이 최대값보다 클 수 없습니다");
+                return;
+            }
+
+            AppSetting.LeftFishPoint = new Point(FishingLeftX, FishingLeftY);
+            AppSetting.RightFishPoint = new Point(FishingRightX, FishingRightY);
+            AppSetting.MinDelay = min;
+            AppSetting.MaxDelay = max;
+            AppSetting.LeftBoxSpritePoint = new Point(BoxSpriteLeftX, BoxSpriteLeftY);
+            AppSetting.RightBoxSpritePoint = new Point(BoxSpriteRightX, BoxSpriteRightY);
+        }
+
+        private void Button_Setting2_Save_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSettings();
+            WriteLog("낚시, 정령, 박스 좌표값 저장완료");
+        }
+
+        private void UpdateSetting2()
+        {
+            TextBox_FishingLeftX.Text = AppSetting.LeftFishPoint.X.ToString();
+            TextBox_FishingLeftY.Text = AppSetting.LeftFishPoint.Y.ToString();
+            TextBox_FishingRightX.Text = AppSetting.RightFishPoint.X.ToString();
+            TextBox_FishingRightY.Text = AppSetting.RightFishPoint.Y.ToString();
+
+            TextBox_BoxSpriteLeftX.Text = AppSetting.LeftBoxSpritePoint.X.ToString();
+            TextBox_BoxSpriteLeftY.Text = AppSetting.LeftBoxSpritePoint.Y.ToString();
+            TextBox_BoxSpriteRightX.Text = AppSetting.RightBoxSpritePoint.X.ToString();
+            TextBox_BoxSpriteRightY.Text = AppSetting.RightBoxSpritePoint.Y.ToString();
+
+            TextBox_ClickDelayMinimun.Text = AppSetting.MinDelay.ToString();
+            TextBox_ClickDelayMaximum.Text = AppSetting.MaxDelay.ToString();
+        }
+        #endregion
+
+        #region Setting3
+        private void Button_Setting3_AddRect_Click(object sender, RoutedEventArgs e)
+        {
+            if (TextBox_Setting3_LeftX.Text.Length == 0 ||
+                TextBox_Setting3_LeftY.Text.Length == 0 ||
+                TextBox_Setting3_RightX.Text.Length == 0||
+                TextBox_Setting3_RightY.Text.Length == 0)
+            {
+                MessageBox.Show("입력은 꼭해주세요");
+                return;
+            }
+
+            int.TryParse(TextBox_Setting3_LeftX.Text, out int LeftX);
+            int.TryParse(TextBox_Setting3_LeftY.Text, out int LeftY);
+            int.TryParse(TextBox_Setting3_RightX.Text, out int RightX);
+            int.TryParse(TextBox_Setting3_RightY.Text, out int RightY);
+
+            if (LeftY > RightY)
+            {
+                MessageBox.Show("좌Y는 우Y보다 클수 없습니다");
+                return;
+            }
+            else if (LeftX > RightX)
+            {
+                MessageBox.Show("좌X는 우X보다 클수 없습니다");
+                return;
+            }
+
+            AppSetting.RectList.Add(new Rect(LeftX, LeftY, RightX, RightY));
+            UpdateRectListView();
+            SaveSettings();
+            WriteLog("저장 후 공간좌표 저장완료");
+        }
+
+        private void UpdateRectListView()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                ListView_RectList.Items.Clear();
+                for (int i=0; i < AppSetting.RectList.Count; i++)
+                {
+                    var rect = AppSetting.RectList[i];
+                    ListView_RectList.Items.Add(
+                        rect.LeftX + "," + rect.LeftY + "," +
+                        rect.RightX + "," + rect.RightY);
+                }
+            });
+        }
+
+        private void ListView_RectList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (ListView_RectList.SelectedItem is null)
+                return;
+
+            if (e.Key == Key.Delete)
+            {
+                AppSetting.RectList.RemoveAt(ListView_RectList.SelectedIndex);
+                SaveSettings();
+                UpdateRectListView();
+                WriteLog("삭제 후 공간좌표 저장완료");
+            }
+        }
+        #endregion
+
 
         #region Tab_Tools
         private void Button_ViewSearchRange_Click(object sender, RoutedEventArgs e)
@@ -522,8 +728,13 @@
 
 
 
+
+
+
+
+
         #endregion
 
-
+       
     }
 }

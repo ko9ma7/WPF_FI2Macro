@@ -274,7 +274,7 @@
                                         ref a, GamePicture.FullFish_SellAll, AppSetting.RectList[( int )RectEnum.FullFishContinue]
                                         )));
                                     FinderThreadList.Add(new Thread(() => ClickThreadOnce(
-                                        ref a, GamePicture.FullFish_SellAllOk, AppSetting.RectList[( int )RectEnum.FullFishContinue]
+                                        ref b, GamePicture.FullFish_SellAllOk, AppSetting.RectList[( int )RectEnum.FullFishContinue]
                                         )));
                                     StartList(FinderThreadList);
                                 }
@@ -352,7 +352,7 @@
                     if ( AppSetting.RectList.Count == 0 )
                     {
                         MainWindow.mainWindow.WriteLog("설정된 렉트리스트가 없습니다");
-                        throw new Exception("설정된 렉트리스트가 없음");
+                        Stop();
                     }
 
                     int SuccessCount = 0;
@@ -400,16 +400,50 @@
             {
                 try
                 {
-                    if ( AppSetting.InputList.Count == 0 )
+                    if (AppSetting.LeftFishPoint.X <= -1 ||
+                        AppSetting.LeftFishPoint.Y <= -1 ||
+                        AppSetting.RightFishPoint.X <= -1 ||
+                        AppSetting.RightFishPoint.Y <= -1)
                     {
-                        MainWindow.mainWindow.WriteLog("설정된 매크로가 없습니다");
-                        throw new Exception("설정된 매크로가 없음");
+                        MainWindow.mainWindow.WriteLog("낚시 좌표가 제대로 설정되지 않았습니다");
+                        Stop();
+                    }
+                    else if (AppSetting.LeftBoxSpritePoint.X <= -1 ||
+                        AppSetting.LeftBoxSpritePoint.Y <= -1 ||
+                        AppSetting.RightBoxSpritePoint.X <= -1 ||
+                        AppSetting.RightBoxSpritePoint.Y <= -1)
+                    {
+                        MainWindow.mainWindow.WriteLog("박스,정령 좌표가 제대로 설정되지 않았습니다");
+                        Stop();
+                    }
+                    else if (AppSetting.MinDelay <= 0 ||
+                        AppSetting.MaxDelay <= 0 )
+                    {
+                        MainWindow.mainWindow.WriteLog("딜레이가 제대로 설정되지 않았습니다");
+                        Stop();
                     }
 
                     while (true)
                     {
-                        for (int i=0 ; i< AppSetting.InputList.Count ; i++ )
-                            AppSetting.InputList[i].Excecute();
+                        List<MacroInput> intputList = new List<MacroInput>();
+                        Random myRandom = new Random();
+                        for (int i=0; i< 3; i++)
+                        {
+                            int randX = myRandom.Next(0, AppSetting.RightFishPoint.X - AppSetting.LeftFishPoint.X);
+                            int randY = myRandom.Next(0, AppSetting.RightFishPoint.Y - AppSetting.LeftFishPoint.Y);
+                            intputList.Add(new MacroInput(new Point(AppSetting.LeftFishPoint.X + randX, AppSetting.LeftFishPoint.Y + randY)));
+                            intputList.Add(new MacroInput(myRandom.Next(AppSetting.MinDelay, AppSetting.MaxDelay)));
+                        }
+                        {
+                            int randX = myRandom.Next(0, AppSetting.RightBoxSpritePoint.X - AppSetting.LeftBoxSpritePoint.X);
+                            int randY = myRandom.Next(0, AppSetting.RightBoxSpritePoint.Y - AppSetting.LeftBoxSpritePoint.Y);
+                            intputList.Add(new MacroInput(new Point(AppSetting.LeftBoxSpritePoint.X + randX, AppSetting.LeftBoxSpritePoint.Y + randY)));
+                            intputList.Add(new MacroInput(myRandom.Next(AppSetting.MinDelay, AppSetting.MaxDelay)));
+                        }
+                        
+
+                        for (int i=0 ; i< intputList.Count ; i++ )
+                            intputList[i].Excecute();
                     }
                 }
                 catch ( Exception e ) { MacroThread = null; }

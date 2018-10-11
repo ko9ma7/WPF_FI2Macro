@@ -75,6 +75,42 @@
                     <TextBlock TextWrapping="Wrap" Margin="157,72,273,33" Text="AbsoluteSize"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="설정2" FontSize="15" Margin="-2,-2,-2,0">
+                <Grid>
+
+                    <TextBlock TextWrapping="Wrap" Margin="8,14,460,91"><Run Text="낚시"/><Run Text=" "/><Run Text="클릭 좌표"/></TextBlock>
+                    <TextBlock TextWrapping="Wrap" Margin="8,41,460,64" Text="상자,정령 좌표"/>
+                    <TextBox x:Name="TextBox_FishingLeftX" HorizontalAlignment="Left" Height="23" Margin="118,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBlock TextWrapping="Wrap" Margin="226,13,332,96" Text="~"/>
+                    <TextBox x:Name="TextBox_FishingLeftY" HorizontalAlignment="Left" Height="23" Margin="172,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBox x:Name="TextBox_FishingRightX" HorizontalAlignment="Left" Height="23" Margin="246,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBox x:Name="TextBox_FishingRightY" HorizontalAlignment="Left" Height="23" Margin="300,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBox x:Name="TextBox_BoxSpriteLeftX" HorizontalAlignment="Left" Height="23" Margin="118,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBlock TextWrapping="Wrap" Margin="226,41,332,64" Text="~"/>
+                    <TextBox x:Name="TextBox_BoxSpriteLeftY" HorizontalAlignment="Left" Height="23" Margin="172,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBox x:Name="TextBox_BoxSpriteRightX" HorizontalAlignment="Left" Height="23" Margin="246,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBox x:Name="TextBox_BoxSpriteRightY" HorizontalAlignment="Left" Height="23" Margin="300,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBlock TextWrapping="Wrap" Margin="8,70,472,44" Text="딜레이"/>
+                    <TextBox x:Name="TextBox_ClickDelayMinimun" HorizontalAlignment="Left" Height="23" Margin="118,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBlock TextWrapping="Wrap" Margin="226,73,332,41" Text="~"/>
+                    <TextBox x:Name="TextBox_ClickDelayMaximum" HorizontalAlignment="Left" Height="23" Margin="246,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <Button x:Name="Button_Setting2_Save" Content="저장" HorizontalAlignment="Left" Margin="275,98,0,0" VerticalAlignment="Top" Width="74" PreviewTextInput="TextBox_LeftX_PreviewTextInput" Click="Button_Setting2_Save_Click"/>
+                    <Button x:Name="Button_Setting2_Apply" Content="적용" HorizontalAlignment="Left" Margin="196,98,0,0" VerticalAlignment="Top" Width="74" PreviewTextInput="TextBox_LeftX_PreviewTextInput" Click="Button_Setting2_Apply_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="설정3" FontSize="15" Margin="-2,-2,-2,0">
+                <Grid>
+                    <TextBlock TextWrapping="Wrap" Margin="30,13,429,95" Text="공간좌표 리스트"/>
+                    <ListView x:Name="ListView_RectList" HorizontalAlignment="Left" Height="88" Margin="10,34,0,0" VerticalAlignment="Top" Width="206" KeyDown="ListView_RectList_KeyDown"/>
+                    <Button x:Name="Button_Setting3_AddRect" Content="공간좌표 추가" HorizontalAlignment="Left" Margin="414,38,0,0" VerticalAlignment="Top" Width="104" Click="Button_Setting3_AddRect_Click"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="178,10,0,0" TextWrapping="Wrap" Text="좌표" VerticalAlignment="Top"/>
+                    <TextBox x:Name="TextBox_Setting3_LeftX" HorizontalAlignment="Left" Height="23" Margin="220,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBox x:Name="TextBox_Setting3_LeftY" HorizontalAlignment="Left" Height="23" Margin="292,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBox x:Name="TextBox_Setting3_RightX" HorizontalAlignment="Left" Height="23" Margin="379,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBox x:Name="TextBox_Setting3_RightY" HorizontalAlignment="Left" Height="23" Margin="451,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" PreviewTextInput="TextBox_LeftX_PreviewTextInput"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="364,13,0,0" TextWrapping="Wrap" Text="~" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
 
         </TabControl>
         <ListView  x:Name="ListView_Log" HorizontalAlignment="Left" Height="163" VerticalAlignment="Top" Width="579" Margin="10,179,0,0"/>

@@ -14,5 +14,8 @@
             RightX = right;
             RightY = bottom;
         }
+
+        public override string ToString()
+            => $"{LeftX},{LeftY},{RightX},{RightY}";
     }
 }

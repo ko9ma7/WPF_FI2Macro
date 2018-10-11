@@ -15,8 +15,13 @@ namespace AutoFish
         public static int LeftY = 500;
         public static int RightX = 1200;
         public static int RightY = 800;
+        public static Point LeftFishPoint = new Point(-1, -1);
+        public static Point RightFishPoint = new Point(-1, -1);
+        public static Point LeftBoxSpritePoint = new Point(-1, -1);
+        public static Point RightBoxSpritePoint = new Point(-1, -1);
+        public static int MinDelay =0 ;
+        public static int MaxDelay = 0;
         public static List<Rect> RectList = new List<Rect>();
-        public static List<MacroInput> InputList = new List<MacroInput>();
     }
 }
 
